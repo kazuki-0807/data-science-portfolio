@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+ <head>
+ <meta charset="shift-jis">
+ <title>私のページ</title>
+ </head>
+ <body>
+ <!--表、リスト、区切り、見出し、他のリンク-->
+ <h1>自己紹介</h1>
+ <ul>
+   <li><h2>氏名</h2></li>
+  上原 教幹<br>
+  <br>
+   <li><h2>大学</h2></li>
+  滋賀大学 データサイエンス学部<br>
+  <br>
+   <li><h2>大まかなおいだち</h2></li>
+   <hr>
+   <p>2003年、沖縄県出生まれる</p>
+   <hr>
+   <p>2011年、関東地方へ引っ越す</p>
+   <hr>
+   <p>2016年、沖縄へ戻る</p>
+   <hr>
+   <p>2023年、滋賀大学生となる</p>
+   <hr>
+
+
+   <li><h2>好きなアーティストと歌</h2></li>
+    <table>
+    <tr>
+    <td>BOOWY</td>
+    <td>レディー・ガガ</td>
+    <td>プリンセスプリンセス</td>
+    </tr>
+    <tr>
+    <td>B-BLUE</td>
+    <td>The edge of glory</td>
+    <td>Diamond</td>
+    </tr>
+    </table>
+
+
+<a href="https://sushida.net/">寿司打へのリンク</a>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
