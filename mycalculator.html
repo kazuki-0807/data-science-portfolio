@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>上原の電卓</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #f0f0f0; }
+    #display { width: 300px; height: 40px; font-size: 20px; text-align: right; margin: 10px auto; display: block; }
+    .button { width: 60px; height: 40px; font-size: 16px; margin: 2px; }
+    .panel { display: inline-block; vertical-align: top; margin: 10px; }
+    .results { margin-top: 10px; font-size: 14px; }
+    .row { display: flex; justify-content: center; flex-wrap: wrap; max-width: 200px; margin: auto; }
+  </style>
+</head>
+<body>
+  <h2>上原の電卓</h2>
+  <input type="text" id="display" value="0" disabled>
+
+  <div class="panel">
+    <div id="numButtons" class="row"></div>
+    <div id="opButtons" class="row"></div>
+    <div id="funcButtons" class="row"></div>
+    <div id="advButtons" class="row"></div>
+    <div class="results">
+      <div id="result1">Result 1:</div>
+      <div id="result2">Result 2:</div>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    const result1 = document.getElementById('result1');
+    const result2 = document.getElementById('result2');
+
+    let operand1 = null, operand2 = null;
+    let operator = null;
+    let isNewEntry = true;
+    let isFirstResult = true;
+
+    function updateResults(val) {
+      if (isFirstResult) {
+        result1.innerHTML = `Result 1: <b>${val}</b>`;
+      } else {
+        result2.innerHTML = `Result 2: <b>${val}</b>`;
+      }
+      isFirstResult = !isFirstResult;
+    }
+
+    function inputNumber(num) {
+      if (isNewEntry || display.value === '0') {
+        display.value = num;
+      } else {
+        display.value += num;
+      }
+      isNewEntry = false;
+    }
+
+    function clearDisplay() {
+      display.value = '0';
+      operand1 = operand2 = operator = null;
+      isNewEntry = true;
+    }
+
+    function setOperator(op) {
+      operand1 = parseFloat(display.value);
+      operator = op;
+      isNewEntry = true;
+    }
+
+    function calculate() {
+      if (operator && operand1 !== null) {
+        operand2 = parseFloat(display.value);
+        let result = 0;
+        switch (operator) {
+          case '＋': result = operand1 + operand2; break;
+          case '－': result = operand1 - operand2; break;
+          case '×': result = operand1 * operand2; break;
+          case '÷': result = operand2 !== 0 ? operand1 / operand2 : 'エラー'; break;
+        }
+        display.value = result;
+        updateResults(result);
+        operand1 = operand2 = operator = null;
+        isNewEntry = true;
+      }
+    }
+
+    function applyFunction(fn) {
+      let val = parseFloat(display.value);
+      let result = val;
+      switch (fn) {
+        case '√': result = Math.sqrt(val); break;
+        case 'x^2': result = val ** 2; break;
+        case 'x^3': result = val ** 3; break;
+        case 'x^4': result = val ** 4; break;
+        case 'x^5': result = val ** 5; break;
+        case '1/x': result = 1 / val; break;
+        case 'e^x': result = Math.exp(val); break;
+        case '10^x': result = 10 ** val; break;
+        case '3√x': result = Math.cbrt(val); break;
+        case 'π': display.value = Math.PI; isNewEntry = true; return;
+        case 'e': display.value = Math.E; isNewEntry = true; return;
+        case 'ln': result = Math.log(val); break;
+        case 'log10': result = Math.log10(val); break;
+        case 'sin': result = Math.sin(val * Math.PI / 180); break;
+        case 'cos': result = Math.cos(val * Math.PI / 180); break;
+        case 'tan': result = Math.tan(val * Math.PI / 180); break;
+        case 'x!':
+          result = 1;
+          for (let i = 2; i <= val; i++) result *= i;
+          break;
+      }
+      display.value = result;
+      updateResults(result);
+      isNewEntry = true;
+    }
+
+    const nums = ['7','8','9','4','5','6','1','2','3','0','00','.'];
+    const ops = ['＋','－','×','÷','＝'];
+    const basics = ['C','x^2','√'];
+    const advs = ['sin','cos','tan','x!','x^3','x^4','1/x','e^x','10^x','x^5','3√x','π','ln','log10','e'];
+
+    nums.forEach(n => {
+      const b = document.createElement('button');
+      b.className = 'button';
+      b.textContent = n;
+      b.onclick = () => inputNumber(n);
+      document.getElementById('numButtons').appendChild(b);
+    });
+
+    basics.forEach(f => {
+      const b = document.createElement('button');
+      b.className = 'button';
+      b.textContent = f;
+      b.onclick = () => applyFunction(f);
+      document.getElementById('funcButtons').appendChild(b);
+    });
+
+    ops.forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'button';
+      b.textContent = o;
+      b.onclick = () => o === '＝' ? calculate() : setOperator(o);
+      document.getElementById('opButtons').appendChild(b);
+    });
+
+    advs.forEach(f => {
+      const b = document.createElement('button');
+      b.className = 'button';
+      b.textContent = f;
+      b.onclick = () => applyFunction(f);
+      document.getElementById('advButtons').appendChild(b);
+    });
+
+    const clearBtn = document.querySelector('.button[textContent="C"]');
+    if (clearBtn) clearBtn.onclick = clearDisplay;
+  </script>
+</body>
+</html>
